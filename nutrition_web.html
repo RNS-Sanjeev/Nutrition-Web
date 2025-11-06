@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriBalance - Diet & Nutrient Analysis Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(34, 197, 94, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .login-card h1 {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+            font-weight: 800;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4ade80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(74, 222, 128, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(74, 222, 128, 0.4);
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #4ade80;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+        }
+
+        .main-content {
+            padding: 30px 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(74, 222, 128, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .card h3 {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(74, 222, 128, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(74, 222, 128, 0.4);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* Search Styles */
+        .search-container {
+            background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(74, 222, 128, 0.1);
+            border: 2px solid rgba(74, 222, 128, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #4ade80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 222, 128, 0.3);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: #4ade80;
+            outline: none;
+        }
+
+        /* Nutritionist Cards */
+        .nutritionists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .nutritionist-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(74, 222, 128, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(74, 222, 128, 0.1);
+        }
+
+        .nutritionist-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(74, 222, 128, 0.2);
+        }
+
+        .nutritionist-avatar {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nutritionist-info {
+            padding: 25px;
+        }
+
+        .nutritionist-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .nutritionist-category {
+            color: #4ade80;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        .consult-btn {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .consult-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            border: 2px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #4ade80;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .filters {
+                justify-content: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(74, 222, 128, 0.3);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            font-weight: 600;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        /* Button variants */
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover, .btn-success:hover, .btn-warning:hover, .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Progress bar styles */
+        .progress-bar {
+            background: #e9ecef;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        /* Star rating styles */
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+        }
+
+        .star-rating span {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .star-rating span:hover,
+        .star-rating span.active {
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card fade-in">
+            <h1>NutriBalance</h1>
+            <p style="margin-bottom: 30px; color: #666; font-size: 1.1rem;">Your personalized nutrition companion</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Select Role</label>
+                    <select id="role" required>
+                        <option value="">Choose your role</option>
+                        <option value="user">User (Track Diet)</option>
+                        <option value="nutritionist">Nutritionist</option>
+                        <option value="admin">Admin</option>
+                        <option value="support">Customer Support</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="dashboard">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">NutriBalance</div>
+                    <div class="user-info">
+                        <span id="userName">Welcome, User!</span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <!-- Search Section -->
+                <div class="search-container">
+                    <h2 style="margin-bottom: 20px; color: #333; font-size: 1.8rem;">Find Nutritionists & Dietitians</h2>
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="Search for nutrition services (e.g., weight loss, child nutrition, sports nutrition)">
+                        <button class="search-btn" onclick="searchNutritionists()">Search</button>
+                    </div>
+                    <div class="filters">
+                        <select class="filter-select" id="categoryFilter" onchange="filterNutritionists()">
+                            <option value="">All Specializations</option>
+                            <option value="Weight Management">Weight Management</option>
+                            <option value="Child Nutrition">Child Nutrition</option>
+                            <option value="Sports Nutrition">Sports Nutrition</option>
+                            <option value="Clinical Nutrition">Clinical Nutrition</option>
+                            <option value="Wellness Coaching">Wellness Coaching</option>
+                        </select>
+                        <select class="filter-select" id="locationFilter" onchange="filterNutritionists()">
+                            <option value="">All Locations</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Pune">Pune</option>
+                        </select>
+                        <select class="filter-select" id="priceFilter" onchange="filterNutritionists()">
+                            <option value="">Any Price</option>
+                            <option value="0-1000">₹0 - ₹1000</option>
+                            <option value="1000-2000">₹1000 - ₹2000</option>
+                            <option value="2000-3000">₹2000 - ₹3000</option>
+                            <option value="3000+">₹3000+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalNutritionists">1,247</div>
+                        <div class="stat-label">Certified Nutritionists</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label">Nutrition Programs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                </div>
+
+                <!-- Nutritionists Grid -->
+                <div class="nutritionists-grid" id="nutritionistsGrid">
+                    <!-- Nutritionist cards will be populated by JavaScript -->
+                </div>
+
+                <!-- User Dashboard Cards -->
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>My Diet Plans</h3>
+                        <p>Track your personalized nutrition plans and progress</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>Nutritionist</th>
+                                    <th>Status</th>
+                                    <th>Progress</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dietPlansTable">
+                                <tr>
+                                    <td>Weight Loss Plan</td>
+                                    <td>Dr. Priya Sharma</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>75%</td>
+                                    <td><button class="btn-success" onclick="viewPlan('Weight Loss Plan')">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Child Nutrition</td>
+                                    <td>Dr. Arjun Patel</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                    <td>100%</td>
+                                    <td><button class="btn-success" onclick="reviewPlan('Dr. Arjun Patel', 'Child Nutrition')">Review</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>Nutrient Tracking</h3>
+                        <p>Monitor your daily nutrient intake</p>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Protein</span>
+                                <span style="color: #4ade80; font-weight: 600;">85g / 100g</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Carbohydrates</span>
+                                <span style="color: #fbbf24; font-weight: 600;">120g / 150g</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Vitamins</span>
+                                <span style="color: #ef4444; font-weight: 600;">60% / 100%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Meal Logging</h3>
+                        <p>Log your daily meals and track calories</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn" style="width: 100%; margin-bottom: 15px;" onclick="logMeal()">Log New Meal</button>
+                            <div id="recentMeals">
+                                <div style="padding: 10px; border-left: 4px solid #4ade80; margin-bottom: 10px; background: rgba(74, 222, 128, 0.05);">
+                                    <div style="font-weight: 600;">Breakfast</div>
+                                    <div style="color: #666; font-size: 0.9rem;">Oats with fruits - 320 calories</div>
+                                    <small style="color: #999;">Today, 8:30 AM</small>
+                                </div>
+                                <div style="padding: 10px; border-left: 4px solid #4ade80; margin-bottom: 10px; background: rgba(74, 222, 128, 0.05);">
+                                    <div style="font-weight: 600;">Lunch</div>
+                                    <div style="color: #666; font-size: 0.9rem;">Grilled chicken salad - 450 calories</div>
+                                    <small style="color: #999;">Today, 1:00 PM</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Health Insights</h3>
+                        <p>AI-powered nutrition recommendations</p>
+                        <div style="margin-top: 15px;" id="healthInsights">
+                            <div style="margin-bottom: 15px; padding: 15px; background: rgba(74, 222, 128, 0.1); border-radius: 10px;">
+                                <div style="font-weight: 600; color: #4ade80;">✓ Good Progress</div>
+                                <p style="color: #666; font-size: 0.9rem;">You're meeting 85% of your protein goals this week!</p>
+                            </div>
+                            <div style="margin-bottom: 15px; padding: 15px; background: rgba(251, 191, 36, 0.1); border-radius: 10px;">
+                                <div style="font-weight: 600; color: #fbbf24;">⚠ Attention Needed</div>
+                                <p style="color: #666; font-size: 0.9rem;">Your vitamin D intake is below recommended levels.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nutritionist Dashboard -->
+    <div id="nutritionistDashboard" class="dashboard">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">NutriBalance</div>
+                    <div class="user-info">
+                        <span id="nutritionistName">Welcome, Nutritionist!</span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Active Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Your Rating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">Plans Created</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Client Consultations</h3>
+                        <p>Manage your client appointments and consultations</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Consultation Type</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rahul Agarwal</td>
+                                    <td>Weight Management</td>
+                                    <td>Dec 20, 2024</td>
+                                    <td><span class="status-badge status-pending">Scheduled</span></td>
+                                    <td><button class="btn-success" onclick="startConsultation('Rahul Agarwal')">Start</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Meera Kapoor</td>
+                                    <td>Child Nutrition</td>
+                                    <td>Dec 18, 2024</td>
+                                    <td><span class="status-badge status-active">In Progress</span></td>
+                                    <td><button class="btn-secondary" onclick="continueConsultation('Meera Kapoor')">Continue</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>Diet Plan Management</h3>
+                        <p>Create and manage personalized nutrition plans</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn" style="margin-bottom: 15px; width: 100%;" onclick="createDietPlan()">Create New Diet Plan</button>
+                            <div id="activePlans">
+                                <div style="border-left: 4px solid #4ade80; padding-left: 15px; margin-bottom: 15px;">
+                                    <div style="font-weight: 600;">Diabetes Management Plan</div>
+                                    <div style="color: #666; font-size: 0.9rem;">Client: Sunita Devi</div>
+                                    <div style="color: #666; font-size: 0.9rem;">Duration: 3 months</div>
+                                    <div style="margin-top: 10px;">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 60%;"></div>
+                                        </div>
+                                        <span style="font-size: 0.8rem; color: #666;">60% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Nutrient Analysis Tools</h3>
+                        <p>Analyze client dietary habits and detect deficiencies</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn-success" style="width: 100%; margin-bottom: 10px;" onclick="analyzeNutrients()">Run Nutrient Analysis</button>
+                            <button class="btn-secondary" style="width: 100%; margin-bottom: 10px;" onclick="generateReport()">Generate Report</button>
+                            <button class="btn-warning" style="width: 100%;" onclick="viewDeficiencies()">View Deficiencies</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Client Progress</h3>
+                        <p>Track your clients' health improvements</p>
+                        <div style="margin-top: 15px;" id="clientProgress">
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-weight: 600;">Rahul Agarwal</div>
+                                <div style="color: #666; font-size: 0.9rem;">Weight Loss: -5kg in 2 months</div>
+                                <div class="rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span>Excellent progress</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="dashboard">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">NutriBalance Admin</div>
+                    <div class="user-info">
+                        <span id="adminName">Welcome, Admin!</span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">12,847</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminTotalNutritionists">1,247</div>
+                        <div class="stat-label">Certified Nutritionists</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Active Diet Plans</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Nutritional Data Management</h3>
+                        <p>Manage food database and nutritional information</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Food Item</th>
+                                    <th>Category</th>
+                                    <th>Calories/100g</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Brown Rice</td>
+                                    <td>Grains</td>
+                                    <td>123 kcal</td>
+                                    <td><span class="status-badge status-active">Verified</span></td>
+                                    <td><button class="btn-secondary" onclick="editFood('Brown Rice')">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Quinoa</td>
+                                    <td>Grains</td>
+                                    <td>368 kcal</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td><button class="btn-success" onclick="verifyFood('Quinoa')">Verify</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>Platform Analytics</h3>
+                        <p>Monitor platform usage and health outcomes</p>
+                        <div style="margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>User Engagement</span>
+                                <span style="color: #4ade80; font-weight: 600;">+15.2%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Diet Plan Success Rate</span>
+                                <span style="color: #4ade80; font-weight: 600;">89.3%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Nutrient Deficiency Detection</span>
+                                <span style="font-weight: 600;">2,341 cases</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Avg. Health Improvement</span>
+                                <span style="font-weight: 600;">+23%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Dietary Recommendations</h3>
+                        <p>Update and manage dietary guidelines</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn-success" style="margin-bottom: 15px; width: 100%;" onclick="updateGuidelines()">Update Guidelines</button>
+                            <div style="max-height: 200px; overflow-y: auto;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                    <span style="font-weight: 600;">Child Nutrition (0-5 years)</span>
+                                    <span style="color: #4ade80; font-weight: 600;">Updated</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                    <span style="font-weight: 600;">Adolescent Nutrition</span>
+                                    <span style="color: #fbbf24; font-weight: 600;">Pending</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                    <span style="font-weight: 600;">Adult Weight Management</span>
+                                    <span style="color: #4ade80; font-weight: 600;">Updated</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Health Data Tracking</h3>
+                        <p>Monitor user health improvements and outcomes</p>
+                        <div style="margin-top: 15px; max-height: 200px; overflow-y: auto;">
+                            <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <div style="font-weight: 600;">Vitamin D deficiency reduced</div>
+                                <div style="color: #666; font-size: 0.9rem;">45% improvement in children aged 5-12</div>
+                                <small style="color: #999;">Last month</small>
+                            </div>
+                            <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <div style="font-weight: 600;">Iron deficiency cases</div>
+                                <div style="color: #666; font-size: 0.9rem;">23% reduction in adolescent girls</div>
+                                <small style="color: #999;">Last quarter</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Dashboard -->
+    <div id="supportDashboard" class="dashboard">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">NutriBalance Support</div>
+                    <div class="user-info">
+                        <span id="supportName">Welcome, Support Agent!</span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="openTickets">34</div>
+                        <div class="stat-label">Open Tickets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label">Resolved Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Satisfaction Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8m</div>
+                        <div class="stat-label">Avg Response Time</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Nutrition Support Tickets</h3>
+                        <p>Help users with diet and nutrition queries</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>User</th>
+                                    <th>Issue Type</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1234</td>
+                                    <td>Ravi Kumar</td>
+                                    <td>Diet Plan Issue</td>
+                                    <td><span style="color: #ef4444; font-weight: 600;">High</span></td>
+                                    <td><span class="status-badge status-pending">Open</span></td>
+                                    <td>
+                                        <button class="btn-secondary" onclick="viewTicket('1234')">View</button>
+                                        <button class="btn-success" onclick="resolveTicket('1234')" style="margin-left: 5px;">Resolve</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1235</td>
+                                    <td>Sunita Devi</td>
+                                    <td>Nutrient Tracking</td>
+                                    <td><span style="color: #fbbf24; font-weight: 600;">Medium</span></td>
+                                    <td><span class="status-badge status-active">In Progress</span></td>
+                                    <td>
+                                        <button class="btn-secondary" onclick="viewTicket('1235')">View</button>
+                                        <button class="btn-success" onclick="resolveTicket('1235')" style="margin-left: 5px;">Resolve</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h3>Quick Actions</h3>
+                        <p>Common nutrition support tasks</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn" style="margin-bottom: 10px; width: 100%;" onclick="createTicket()">Create New Ticket</button>
+                            <button class="btn-success" style="margin-bottom: 10px; width: 100%;" onclick="viewNutritionGuides()">Nutrition Guides</button>
+                            <button class="btn-secondary" style="width: 100%;" onclick="viewReports()">Generate Report</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Recent Resolutions</h3>
+                        <p>Successfully resolved nutrition queries</p>
+                        <div style="margin-top: 15px; max-height: 200px; overflow-y: auto;">
+                            <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <div style="font-weight: 600;">Diet plan customization</div>
+                                <div style="color: #666; font-size: 0.9rem;">Ticket #1230 - User: Deepak Gupta</div>
+                                <small style="color: #999;">Resolved 1 hour ago</small>
+                            </div>
+                            <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                                <div style="font-weight: 600;">Nutrient tracking issue</div>
+                                <div style="color: #666; font-size: 0.9rem;">Ticket #1228 - User: Pooja Agarwal</div>
+                                <small style="color: #999;">Resolved 3 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>User Feedback</h3>
+                        <p>Recent support ratings and nutrition feedback</p>
+                        <div style="margin-top: 15px;">
+                            <div style="margin-bottom: 15px;">
+                                <div class="rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span>5.0</span>
+                                </div>
+                                <p style="color: #666; font-size: 0.9rem;">"Great help with my child's nutrition plan. Very knowledgeable support!"</p>
+                                <small style="color: #999;">- User #1234</small>
+                            </div>
+                            <div>
+                                <div class="rating">
+                                    <span class="stars">★★★★☆</span>
+                                    <span>4.0</span>
+                                </div>
+                                <p style="color: #666; font-size: 0.9rem;">"Helpful guidance on nutrient deficiency detection."</p>
+                                <small style="color: #999;">- User #1235</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultation Modal -->
+    <div id="consultationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('consultationModal')">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #333;">Book Nutrition Consultation</h2>
+            <form id="consultationForm">
+                <div class="form-group">
+                    <label>Health Goals</label>
+                    <textarea style="width: 100%; padding: 15px; border: 2px solid #e1e5e9; border-radius: 10px; min-height: 100px; font-family: inherit;" placeholder="Describe your health and nutrition goals..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Date</label>
+                    <input type="date" style="width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px;" required>
+                </div>
+                <div class="form-group">
+                    <label>Consultation Type</label>
+                    <select style="width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px;" required>
+                        <option value="">Select consultation type</option>
+                        <option value="weight-loss">Weight Management</option>
+                        <option value="child-nutrition">Child Nutrition</option>
+                        <option value="sports-nutrition">Sports Nutrition</option>
+                        <option value="clinical">Clinical Nutrition</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Book Consultation</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let nutritionists = [
+            {
+                id: 1,
+                name: "Dr. Priya Sharma",
+                category: "Weight Management",
+                subcategory: "Clinical Nutritionist",
+                rating: 4.9,
+                reviews: 127,
+                price: 1500,
+                priceUnit: "consultation",
+                avatar: "PS",
+                location: "Mumbai",
+                image: "/placeholder.svg?height=220&width=320"
+            },
+            {
+                id: 2,
+                name: "Dr. Arjun Patel",
+                category: "Child Nutrition",
+                subcategory: "Pediatric Nutritionist",
+                rating: 4.8,
+                reviews: 89,
+                price: 1200,
+                priceUnit: "consultation",
+                avatar: "AP",
+                location: "Bangalore",
+                image: "/placeholder.svg?height=220&width=320"
+            },
+            {
+                id: 3,
+                name: "Dr. Kavya Reddy",
+                category: "Sports Nutrition",
+                subcategory: "Sports Nutritionist",
+                rating: 5.0,
+                reviews: 156,
+                price: 2000,
+                priceUnit: "consultation",
+                avatar: "KR",
+                location: "Hyderabad",
+                image: "/placeholder.svg?height=220&width=320"
+            },
+            {
+                id: 4,
+                name: "Dr. Rajesh Kumar",
+                category: "Clinical Nutrition",
+                subcategory: "Diabetes Specialist",
+                rating: 4.7,
+                reviews: 203,
+                price: 1800,
+                priceUnit: "consultation",
+                avatar: "RK",
+                location: "Delhi",
+                image: "/placeholder.svg?height=220&width=320"
+            },
+            {
+                id: 5,
+                name: "Dr. Sneha Gupta",
+                category: "Wellness Coaching",
+                subcategory: "Holistic Nutritionist",
+                rating: 4.9,
+                reviews: 94,
+                price: 1300,
+                priceUnit: "consultation",
+                avatar: "SG",
+                location: "Pune",
+                image: "/placeholder.svg?height=220&width=320"
+            },
+            {
+                id: 6,
+                name: "Dr. Vikram Singh",
+                category: "Weight Management",
+                subcategory: "Obesity Specialist",
+                rating: 4.8,
+                reviews: 112,
+                price: 1600,
+                priceUnit: "consultation",
+                avatar: "VS",
+                location: "Chennai",
+                image: "/placeholder.svg?height=220&width=320"
+            }
+        ];
+
+        let currentUser = null;
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const role = document.getElementById('role').value;
+            
+            if (!name || !email || !role) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            currentUser = { name, email, role };
+            
+            // Hide login page
+            document.getElementById('loginPage').style.display = 'none';
+            
+            // Show appropriate dashboard based on role
+            const dashboards = {
+                'user': 'userDashboard',
+                'nutritionist': 'nutritionistDashboard',
+                'admin': 'adminDashboard',
+                'support': 'supportDashboard'
+            };
+            
+            const targetDashboard = dashboards[role];
+            document.getElementById(targetDashboard).classList.add('active');
+            
+            // Update user name in header
+            const nameElements = {
+                'user': 'userName',
+                'nutritionist': 'nutritionistName',
+                'admin': 'adminName',
+                'support': 'supportName'
+            };
+            
+            document.getElementById(nameElements[role]).textContent = `Welcome, ${name}!`;
+            
+            // Load nutritionists for user dashboard
+            if (role === 'user') {
+                loadNutritionists();
+            }
+            
+            showNotification(`Welcome ${name}! Logged in as ${role.charAt(0).toUpperCase() + role.slice(1)}`, 'success');
+        });
+
+        function loadNutritionists(filteredList = null) {
+            const grid = document.getElementById('nutritionistsGrid');
+            grid.innerHTML = '';
+            
+            const nutritionistsToShow = filteredList || nutritionists;
+            
+            nutritionistsToShow.forEach(nutritionist => {
+                const card = document.createElement('div');
+                card.className = 'nutritionist-card fade-in';
+                card.innerHTML = `
+                    <img src="${nutritionist.image}" alt="${nutritionist.name}" style="width: 100%; height: 220px; object-fit: cover; border-radius: 20px 20px 0 0;">
+                    <div class="nutritionist-info">
+                        <div class="nutritionist-name">${nutritionist.name}</div>
+                        <div class="nutritionist-category">${nutritionist.subcategory}</div>
+                        <div style="color: #999; font-size: 0.9rem; margin-bottom: 10px;">${nutritionist.location}</div>
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span>${nutritionist.rating} (${nutritionist.reviews} reviews)</span>
+                        </div>
+                        <div style="margin-bottom: 15px; font-weight: 600; color: #4ade80;">₹${nutritionist.price}/${nutritionist.priceUnit}</div>
+                        <button class="consult-btn" onclick="consultNutritionist(${nutritionist.id})">Book Consultation</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            document.getElementById('totalNutritionists').textContent = nutritionistsToShow.length.toLocaleString();
+        }
+
+        function searchNutritionists() {
+            const searchInput = document.querySelector('.search-input');
+            const query = searchInput.value.toLowerCase();
+            
+            if (!query) {
+                loadNutritionists();
+                return;
+            }
+            
+            const filtered = nutritionists.filter(n => 
+                n.name.toLowerCase().includes(query) || 
+                n.category.toLowerCase().includes(query) ||
+                n.subcategory.toLowerCase().includes(query) ||
+                n.location.toLowerCase().includes(query)
+            );
+            
+            loadNutritionists(filtered);
+            showNotification(`Found ${filtered.length} nutritionists`, 'success');
+        }
+
+        function filterNutritionists() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const locationFilter = document.getElementById('locationFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+            
+            let filtered = nutritionists;
+            
+            if (categoryFilter) {
+                filtered = filtered.filter(n => n.category === categoryFilter);
+            }
+            
+            if (locationFilter) {
+                filtered = filtered.filter(n => n.location === locationFilter);
+            }
+            
+            if (priceFilter) {
+                const [min, max] = priceFilter.split('-').map(p => p.replace('₹', '').replace(',', ''));
+                filtered = filtered.filter(n => {
+                    if (max) {
+                        return n.price >= parseInt(min) && n.price <= parseInt(max);
+                    } else {
+                        return n.price >= parseInt(min);
+                    }
+                });
+            }
+            
+            loadNutritionists(filtered);
+            showNotification(`Filtered to ${filtered.length} nutritionists`, 'info');
+        }
+
+        function consultNutritionist(id) {
+            const nutritionist = nutritionists.find(n => n.id === id);
+            document.getElementById('consultationModal').classList.add('active');
+            showNotification(`Booking consultation with ${nutritionist.name}`, 'info');
+        }
+
+        function closeModal(modalId = null) {
+            if (modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            } else {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        }
+
+        // Handle consultation form submission
+        document.getElementById('consultationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            closeModal('consultationModal');
+            showNotification('Consultation booked successfully!', 'success');
+            this.reset();
+        });
+
+        // Placeholder functions for various actions
+        function logMeal() { showNotification('Meal logging feature opened', 'info'); }
+        function viewPlan(plan) { showNotification(`Viewing ${plan}`, 'info'); }
+        function reviewPlan(nutritionist, plan) { showNotification(`Reviewing ${plan} by ${nutritionist}`, 'info'); }
+        function startConsultation(client) { showNotification(`Starting consultation with ${client}`, 'success'); }
+        function continueConsultation(client) { showNotification(`Continuing consultation with ${client}`, 'info'); }
+        function createDietPlan() { showNotification('Diet plan creator opened', 'info'); }
+        function analyzeNutrients() { showNotification('Running nutrient analysis...', 'info'); }
+        function generateReport() { showNotification('Generating nutrition report...', 'info'); }
+        function viewDeficiencies() { showNotification('Viewing nutrient deficiencies', 'info'); }
+        function editFood(food) { showNotification(`Editing ${food} data`, 'info'); }
+        function verifyFood(food) { showNotification(`${food} verified successfully`, 'success'); }
+        function updateGuidelines() { showNotification('Dietary guidelines updated', 'success'); }
+        function viewTicket(id) { showNotification(`Viewing ticket #${id}`, 'info'); }
+        function resolveTicket(id) { showNotification(`Ticket #${id} resolved`, 'success'); }
+        function createTicket() { showNotification('New ticket form opened', 'info'); }
+        function viewNutritionGuides() { showNotification('Nutrition guides opened', 'info'); }
+        function viewReports() { showNotification('Reports dashboard opened', 'info'); }
+
+        function logout() {
+            document.querySelectorAll('.dashboard').forEach(dashboard => {
+                dashboard.classList.remove('active');
+            });
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            currentUser = null;
+            showNotification('Logged out successfully', 'success');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        // Search on Enter key
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchNutritionists();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Welcome to NutriBalance! Your personalized nutrition companion.', 'info');
+        });
+    </script>
+</body>
+</html>
